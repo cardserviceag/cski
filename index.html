@@ -11,20 +11,24 @@
     body {
       margin: 0;
       font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #fafafa;
+      background: linear-gradient(135deg, #f0f2f5, #dfe9f3);
+      min-height: 100vh;
     }
     #root {
       max-width: 600px;
       margin: 20px auto;
+      padding: 10px;
     }
     .chat {
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 10px;
       height: 400px;
       overflow-y: auto;
       margin-bottom: 10px;
       background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      scroll-behavior: smooth;
     }
     .msg {
       margin: 8px 0;
@@ -37,10 +41,37 @@
       padding: 8px 12px;
       border-radius: 16px;
       background: #eee;
+      max-width: 80%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     .msg.user .bubble {
       background: #007bff;
       color: #fff;
+    }
+    input {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      flex: 1;
+    }
+    button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    p {
+      text-align: center;
     }
   </style>
 </head>
@@ -50,7 +81,7 @@
   </header>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
     const API_KEY = ""; // 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
 
     function detectEmotion(input) {
@@ -128,9 +159,13 @@
       const [input, setInput] = useState("");
       const [personality, setPersonality] = useState("Freund");
       const [moodTracker, setMoodTracker] = useState({});
+      const chatRef = useRef(null);
 
       useEffect(() => {
         localStorage.setItem("chatHistory", JSON.stringify(messages));
+        if (chatRef.current) {
+          chatRef.current.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" });
+        }
       }, [messages]);
 
       const handleSend = async () => {
@@ -167,7 +202,7 @@
           <p>Persönlichkeit: <b>{personality}</b> (schreibe „Coach“, „Freund“ oder „Mentor“)</p>
           <button onClick={newChat} style={{ marginBottom: 10 }}>🆕 Neuer Chat</button>
 
-          <div className="chat">
+          <div className="chat" ref={chatRef}>
             {messages.map((msg, i) => (
               <div key={i} className={"msg " + (msg.sender === "user" ? "user" : "")}>
                 <span className="bubble">{msg.text}</span>
@@ -180,7 +215,6 @@
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Schreibe etwas..."
-              style={{ flex: 1, padding: 8, borderRadius: 8, border: "1px solid #ccc" }}
               onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
             />
             <button onClick={handleSend}>Senden</button>
