@@ -73,8 +73,6 @@
           neutral: ["Ich höre dir zu. Erzähl mir mehr."]
         }
       };
-
-      const replyList = (responses[personality] && responses[personality][emotion]) || responses["Freund"]["neutral"];
       return replyList[Math.floor(Math.random() * replyList.length)];
     }
 
