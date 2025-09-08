@@ -12,7 +12,7 @@
       margin: 0;
       font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, #f0f2f5, #dfe9f3);
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
     }
@@ -52,8 +52,7 @@
       color: #fff;
     }
     input {
-      padding: 8px;
-      border-radius: 8px;
+@@ -54,52 +57,59 @@
       border: 1px solid #ccc;
       flex: 1;
     }
@@ -83,7 +82,7 @@
     <img src="mascot.png" alt="csKI Maskottchen" style="height:40px;" />
     <img src="logo.png" alt="csKI Logo" style="height:40px;" />
     <div style="position:relative;">
-      <button id="menu-button" style="background:none;border:none;font-size:24px;cursor:pointer;">☰</button>
+      <button id="menu-button" style="background:none;border:none;font-size:24px;cursor:pointer;color:#000;">☰</button>
       <div id="menu-dropdown" style="display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
         <div style="padding:10px;cursor:pointer;" onclick="window.newChat()">Neuer Chat</div>
       </div>
@@ -113,31 +112,7 @@
           sad: ["Das klingt traurig 😔. Willst du mir mehr erzählen?"],
           happy: ["Mega! 😄 Was hat dich so gefreut?"],
           stressed: ["Klingt nach Stress. Soll ich dir kleine Tipps geben?"],
-          pain: ["Autsch, das klingt schmerzhaft. Was genau tut weh?"],
-          fear: ["Oh, das klingt beunruhigend. Wovor hast du Angst?"],
-          neutral: ["Ich höre dir zu. Erzähl mir mehr."]
-        }
-      };
-
-      const replyList = (responses[personality] && responses[personality][emotion]) || responses["Freund"]["neutral"];
-      return replyList[Math.floor(Math.random() * replyList.length)];
-    }
-
-    async function gptReply(input, messages, personality) {
-      if (!API_KEY) return null;
-
-      const systemPrompt = `Du bist csKI, ein empathischer KI-Coach und Freund. Persönlichkeit: ${personality}. Sei einfühlsam, klar und hilfreich.`;
-
-      try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${API_KEY}`,
-          },
-          body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
+@@ -131,99 +141,108 @@
               { role: "system", content: systemPrompt },
               ...messages.map(m => ({
                 role: m.sender === "user" ? "user" : "assistant",
