@@ -12,18 +12,21 @@
       margin: 0;
       font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, #f0f2f5, #dfe9f3);
-      min-height: 100vh;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     #root {
-      max-width: 600px;
-      margin: 20px auto;
+      flex: 1;
       padding: 10px;
+      display: flex;
+      flex-direction: column;
     }
     .chat {
       border: 1px solid #ccc;
       border-radius: 12px;
       padding: 10px;
-      height: 400px;
+      flex: 1;
       overflow-y: auto;
       margin-bottom: 10px;
       background: #fff;
@@ -76,8 +79,15 @@
   </style>
 </head>
 <body>
-  <header style="background:#fff;padding:10px;display:flex;align-items:center;justify-content:center;gap:10px;">
+  <header style="background:#fff;padding:10px;display:flex;align-items:center;justify-content:space-between;">
+    <img src="mascot.png" alt="csKI Maskottchen" style="height:40px;" />
     <img src="logo.png" alt="csKI Logo" style="height:40px;" />
+    <div style="position:relative;">
+      <button id="menu-button" style="background:none;border:none;font-size:24px;cursor:pointer;color:#000;">☰</button>
+      <div id="menu-dropdown" style="display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+        <div style="padding:10px;cursor:pointer;" onclick="window.newChat()">Neuer Chat</div>
+      </div>
+    </div>
   </header>
   <div id="root"></div>
   <script type="text/babel">
@@ -153,7 +163,7 @@
         const saved = localStorage.getItem("chatHistory");
         return saved ? JSON.parse(saved) : [{
           sender: "ai",
-          text: "Hallo! Ich bin csKI, dein KI-Coach. Wie geht es dir heute?"
+          text: "Hallo, ich bin Card Service KI, wie kann ich dir helfen?"
         }];
       });
       const [input, setInput] = useState("");
@@ -191,39 +201,48 @@
 
       const newChat = () => {
         localStorage.removeItem("chatHistory");
-        setMessages([{ sender: "ai", text: "Neuer Start 🚀 – Hallo, ich bin csKI! Welche Persönlichkeit wünschst du dir heute?" }]);
+        setMessages([{ sender: "ai", text: "Hallo, ich bin Card Service KI, wie kann ich dir helfen?" }]);
         setMoodTracker({});
       };
 
-      return (
-        <div>
-          <h2>csKI – Dein KI-Coach</h2>
-          <img src="mascot.png" alt="csKI Maskottchen" style={{ display: "block", margin: "0 auto 10px", height: 100 }} />
-          <p>Persönlichkeit: <b>{personality}</b> (schreibe „Coach“, „Freund“ oder „Mentor“)</p>
-          <button onClick={newChat} style={{ marginBottom: 10 }}>🆕 Neuer Chat</button>
+      useEffect(() => {
+        window.newChat = newChat;
+      }, [newChat]);
 
-          <div className="chat" ref={chatRef}>
-            {messages.map((msg, i) => (
-              <div key={i} className={"msg " + (msg.sender === "user" ? "user" : "")}>
-                <span className="bubble">{msg.text}</span>
-              </div>
-            ))}
-          </div>
+        return (
+          <>
+            <div className="chat" ref={chatRef}>
+              {messages.map((msg, i) => (
+                <div key={i} className={"msg " + (msg.sender === "user" ? "user" : "")}> 
+                  <span className="bubble">{msg.text}</span>
+                </div>
+              ))}
+            </div>
 
-          <div style={{ display: "flex", gap: 8 }}>
-            <input
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              placeholder="Schreibe etwas..."
-              onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
-            />
-            <button onClick={handleSend}>Senden</button>
-          </div>
-        </div>
-      );
-    }
+            <div style={{ display: "flex", gap: 8 }}>
+              <input
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                placeholder="Schreibe etwas..."
+                onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
+              />
+              <button onClick={handleSend}>Senden</button>
+            </div>
+          </>
+        );
+      }
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+      const menuButton = document.getElementById("menu-button");
+      const menuDropdown = document.getElementById("menu-dropdown");
+      menuButton.addEventListener("click", e => {
+        e.stopPropagation();
+        menuDropdown.style.display = menuDropdown.style.display === "block" ? "none" : "block";
+      });
+      document.addEventListener("click", () => {
+        menuDropdown.style.display = "none";
+      });
   </script>
 </body>
 </html>
