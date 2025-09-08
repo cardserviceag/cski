@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>csKI Chat</title>
+  <title>Card Service KI Chat</title>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -66,19 +66,9 @@
     button:hover {
       background: #0056b3;
     }
-    h2 {
-      text-align: center;
-      margin-top: 0;
-    }
-    p {
-      text-align: center;
-    }
   </style>
 </head>
 <body>
-  <header style="background:#fff;padding:10px;display:flex;align-items:center;justify-content:center;gap:10px;">
-    <img src="logo.png" alt="csKI Logo" style="height:40px;" />
-  </header>
   <div id="root"></div>
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
@@ -116,7 +106,7 @@
     async function gptReply(input, messages, personality) {
       if (!API_KEY) return null;
 
-      const systemPrompt = `Du bist csKI, ein empathischer KI-Coach und Freund. Persönlichkeit: ${personality}. Sei einfühlsam, klar und hilfreich.`;
+      const systemPrompt = `Du bist Card Service KI, ein empathischer KI-Coach und Freund. Persönlichkeit: ${personality}. Sei einfühlsam, klar und hilfreich.`;
 
       try {
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -153,7 +143,7 @@
         const saved = localStorage.getItem("chatHistory");
         return saved ? JSON.parse(saved) : [{
           sender: "ai",
-          text: "Hallo! Ich bin csKI, dein KI-Coach. Wie geht es dir heute?"
+          text: "Hallo, ich bin Card Service KI, wie kann ich dir helfen?"
         }];
       });
       const [input, setInput] = useState("");
@@ -191,16 +181,16 @@
 
       const newChat = () => {
         localStorage.removeItem("chatHistory");
-        setMessages([{ sender: "ai", text: "Neuer Start 🚀 – Hallo, ich bin csKI! Welche Persönlichkeit wünschst du dir heute?" }]);
+        setMessages([{ sender: "ai", text: "Hallo, ich bin Card Service KI, wie kann ich dir helfen?" }]);
         setMoodTracker({});
       };
 
       return (
         <div>
-          <h2>csKI – Dein KI-Coach</h2>
-          <img src="mascot.png" alt="csKI Maskottchen" style={{ display: "block", margin: "0 auto 10px", height: 100 }} />
-          <p>Persönlichkeit: <b>{personality}</b> (schreibe „Coach“, „Freund“ oder „Mentor“)</p>
-          <button onClick={newChat} style={{ marginBottom: 10 }}>🆕 Neuer Chat</button>
+          <header style={{ background: "#fff", padding: 10, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <img src="mascot.png" alt="Card Service KI Maskottchen" style={{ height: 40 }} />
+            <button onClick={newChat}>🆕 Neuer Chat</button>
+          </header>
 
           <div className="chat" ref={chatRef}>
             {messages.map((msg, i) => (
