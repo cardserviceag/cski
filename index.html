@@ -76,8 +76,8 @@
   </style>
 </head>
 <body>
-  <header style="background:#fff;padding:10px;display:flex;align-items:center;justify-content:center;gap:10px;">
-    <img src="mascot.png" alt="Card Service KI Maskottchen" style={{ height: 40 }} />
+  <header style="background:#fff;padding:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+    <img src="mascot.png" alt="Card Service KI Maskottchen" style={{ height: 15 }} />
     <img src="logo.png" alt="csKI Logo" style="height:40px;" />
     <button onClick={newChat}>🆕 Neuer Chat</button>
   </header>
@@ -196,17 +196,12 @@
 
       const newChat = () => {
         localStorage.removeItem("chatHistory");
-        setMessages([{ sender: "ai", text: "Neuer Start 🚀 – Hallo, ich bin csKI! Welche Persönlichkeit wünschst du dir heute?" }]);
+        setMessages([{ sender: "ai", text: "Hallo, ich bin die Card Service KI, wie kann ich dir helfen?" }]);
         setMoodTracker({});
       };
 
       return (
         <div>
-          <h2>csKI – Dein KI-Coach</h2>
-          <img src="mascot.png" alt="csKI Maskottchen" style={{ display: "block", margin: "0 auto 10px", height: 100 }} />
-          <p>Persönlichkeit: <b>{personality}</b> (schreibe „Coach“, „Freund“ oder „Mentor“)</p>
-          <button onClick={newChat} style={{ marginBottom: 10 }}>🆕 Neuer Chat</button>
-
           <div className="chat" ref={chatRef}>
             {messages.map((msg, i) => (
               <div key={i} className={"msg " + (msg.sender === "user" ? "user" : "")}>
